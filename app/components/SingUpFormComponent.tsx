@@ -1,5 +1,9 @@
-"use client"
-import { Card, CardContent, CardHeader, CardTitle } from "./card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 import {
   Form,
   FormField,
@@ -8,63 +12,79 @@ import {
   FormDescription,
   FormMessage,
   FormControl,
-} from "./form";
+} from "../../components/ui/form";
 import { Input } from "@/components/ui/input";
-import {useForm} from 'react-hook-form'
-import { Button } from "./button";
+import { hashPassword } from "@/app/lib/utils";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { Button } from "../../components/ui/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { supabase } from "@/app/lib/supabase";
 const formSchema = z.object({
-  signin_username: z
+  username: z
     .string()
     .min(2, {
-      message: "Wrong username.",
+      message: "Username must be unique.",
     })
     .max(50),
-    signin_password: z.string().min(8, {
-    message: "Try again",
+  password: z.string().min(8, {
+    message: "Password must be at lest 8 characters long",
   }),
 });
-const SignInFormComponent = () => {
+const SignupFormComponent = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      signin_username: "",
-      signin_password: "",
+      username: "",
+      password: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log("Sign in details: ",values);
-  }
+  // function onSubmit(values: z.infer<typeof formSchema>) {
+  //   // Do something with the form values.
+  //   // ✅ This will be type-safe and validated.
+  //   console.log(values);
+  // }
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const hashedPassword = await hashPassword(values.password);
+      await supabase.from("new_users").insert({
+        unique_username: values.username,
+        password: hashedPassword,
+      });
+      router.push("/Home");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div>
       <Card className="mx-auto w-max">
         <CardHeader>
-          <CardTitle className="text-center">Login</CardTitle>
+          <CardTitle className="text-center">Sign up</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
-                name="signin_username"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input placeholder="Username" {...field} />
                     </FormControl>
-                    <FormDescription>Enter your username.</FormDescription>
+                    <FormDescription>Enter a unique username.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="signin_password"
+                name="password"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
@@ -76,14 +96,14 @@ const SignInFormComponent = () => {
                       />
                     </FormControl>
                     <FormDescription>
-                      Enter your password
+                      Enter a password for your account
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <Button type="submit" className="w-full">
-                Sign in
+                Sign up
               </Button>
             </form>
           </Form>
@@ -93,4 +113,4 @@ const SignInFormComponent = () => {
   );
 };
 
-export default SignInFormComponent;
+export default SignupFormComponent;

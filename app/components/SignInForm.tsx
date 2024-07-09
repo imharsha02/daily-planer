@@ -1,4 +1,4 @@
-import SignInFormComponent from "@/components/ui/SingInFormComponent"
+import SignInFormComponent from "@/app/components/SingInFormComponent"
 import { TypographyH2 } from "@/components/ui/TypographyH2";
 import { TypographyP } from "@/components/ui/TypographyP";
 const SignInForm = () => {

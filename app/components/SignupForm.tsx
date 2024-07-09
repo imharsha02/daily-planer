@@ -1,7 +1,9 @@
 import { TypographyH2 } from "@/components/ui/TypographyH2";
 import { TypographyP } from "@/components/ui/TypographyP";
-import SignupFormComponent from "@/components/ui/SingUpFormComponent";
+import SignupFormComponent from "@/app/components/SingUpFormComponent";
+import { supabase } from "../lib/supabase";
 const SignupForm = () => {
+    
   return (
     <div className="grid grid-cols-2">
       {/* About the app */}
@@ -17,7 +19,7 @@ const SignupForm = () => {
           </TypographyP>
         </div>
       </div>
-      <SignupFormComponent />
+      <SignupFormComponent/>
     </div>
   );
 };

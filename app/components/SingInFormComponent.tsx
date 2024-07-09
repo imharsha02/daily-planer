@@ -1,5 +1,5 @@
 "use client"
-import { Card, CardContent, CardHeader, CardTitle } from "./card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import {
   Form,
   FormField,
@@ -8,63 +8,63 @@ import {
   FormDescription,
   FormMessage,
   FormControl,
-} from "./form";
+} from "../../components/ui/form";
 import { Input } from "@/components/ui/input";
 import {useForm} from 'react-hook-form'
-import { Button } from "./button";
+import { Button } from "../../components/ui/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 const formSchema = z.object({
-  username: z
+  signin_username: z
     .string()
     .min(2, {
-      message: "Username must be unique.",
+      message: "Wrong username.",
     })
     .max(50),
-  password: z.string().min(8, {
-    message: "Password must be at lest 8 characters long",
+    signin_password: z.string().min(8, {
+    message: "Try again",
   }),
 });
-const SignupFormComponent = () => {
+const SignInFormComponent = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      password: "",
+      signin_username: "",
+      signin_password: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    console.log("Sign in details: ",values);
   }
   return (
     <div>
       <Card className="mx-auto w-max">
         <CardHeader>
-          <CardTitle className="text-center">Sign up</CardTitle>
+          <CardTitle className="text-center">Login</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
-                name="username"
+                name="signin_username"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input placeholder="Username" {...field} />
                     </FormControl>
-                    <FormDescription>Enter a unique username.</FormDescription>
+                    <FormDescription>Enter your username.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="password"
+                name="signin_password"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
@@ -76,14 +76,14 @@ const SignupFormComponent = () => {
                       />
                     </FormControl>
                     <FormDescription>
-                      Enter a password for your account
+                      Enter your password
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <Button type="submit" className="w-full">
-                Sign up
+                Sign in
               </Button>
             </form>
           </Form>
@@ -93,4 +93,4 @@ const SignupFormComponent = () => {
   );
 };
 
-export default SignupFormComponent;
+export default SignInFormComponent;
