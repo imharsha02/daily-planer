@@ -1,8 +1,9 @@
+"use client"
+import TaskDetails from '../components/TaskDetails'
+
 const Home = () => {
   return (
-    <div>
-      Welcome to home
-    </div>
+    <TaskDetails />
   )
 }
 
